@@ -1,6 +1,5 @@
-import React, { useState } from "react";
-import CsvFileReader from "./components/CsvFileReader";
-import { Heading, Fade, Button, ChakraProvider, Stack, VStack, TableContainer, Table, Tr, Th, Thead, Tbody, Td, Box, Flex, Text, Link } from '@chakra-ui/react'
+import { useState } from "react";
+import { Heading, ChakraProvider, TableContainer, Table, Tr, Th, Thead, Tbody, Td, Box, Flex, Link } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid';
 import Schema from "./components/Schema";
 
