@@ -1,7 +1,7 @@
-import React, { useState } from "react"
+import React from "react"
 import { useCSVReader } from "react-papaparse"
 import { v4 as uuidv4 } from 'uuid';
-import { Box, Button, HStack, Table, TableContainer, Tr, Th, Thead, Tbody, Td, Select, Text } from "@chakra-ui/react"
+import { Box, Button, HStack, Table, TableContainer, Tr, Th, Thead, Tbody, Td, Select, Text, Flex } from "@chakra-ui/react"
 
 const styles = {
   csvReader: {
@@ -70,12 +70,21 @@ const CsvFileReader = props => {
             <Button {...getRootProps()}>
               Browse files
             </Button>
-            <Box>
-              {acceptedFile && acceptedFile.name}
-            </Box>
-            <Button {...getRemoveFileProps()}>
-              Remove
-            </Button>
+            {acceptedFile !== null &&
+              <Flex direction="row">
+                <Box>
+                  {acceptedFile.name}
+                </Box>
+                <Button
+                  {...getRemoveFileProps()}
+                  onClick={event => {
+                    getRemoveFileProps().onClick(event);
+                    setCsvData(null);
+                  }}>
+                  Remove
+                </Button>
+              </Flex>
+            }
           </HStack>
           <ProgressBar style={styles.progressBarBackgroundColor} />
           {csvData !== null &&
