@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Heading, ChakraProvider, TableContainer, Table, Tr, Th, Thead, Tbody, Td, Box, Flex, Link, Center } from '@chakra-ui/react'
-import { v4 as uuidv4 } from 'uuid';
+import { Heading, ChakraProvider, Flex, Link } from '@chakra-ui/react'
 import Schema from "./components/Schema";
 import ResultTable from "./components/ResultTable";
 
