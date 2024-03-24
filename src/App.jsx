@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Heading, ChakraProvider, TableContainer, Table, Tr, Th, Thead, Tbody, Td, Box, Flex, Link } from '@chakra-ui/react'
+import { Heading, ChakraProvider, TableContainer, Table, Tr, Th, Thead, Tbody, Td, Box, Flex, Link, Center } from '@chakra-ui/react'
 import { v4 as uuidv4 } from 'uuid';
 import Schema from "./components/Schema";
+import ResultTable from "./components/ResultTable";
 
 const App = () => {
   const [firstCsvData, setFirstCsvData] = useState(null);
@@ -11,6 +12,8 @@ const App = () => {
   const [secondCsvData, setSecondCsvData] = useState(null);
   const [secondCsvOutflowColumnIndex, setSecondCsvOutflowColumnIndex] = useState(-1);
   const [secondCsvInflowColumnIndex, setSecondCsvInflowColumnIndex] = useState(-1);
+
+  const MAXWIDTH = "90rem";
 
   const calculateButtonClickHandler = () => {
     const valueRegexPattern = /\d*[.,]?\d+/g;
@@ -35,6 +38,9 @@ const App = () => {
       row.inflowValue = inflowValue
     });
 
+    console.log(firstCsvDataCopy);
+    console.log(secondCsvData);
+
     firstCsvDataCopy.rows.forEach((firstCsvRow, firstCsvRowIndex) => {
       secondCsvDataCopy.rows.forEach((secondCsvRow, secondCsvRowIndex) => {
         if (firstCsvRow.outflowValue === secondCsvRow.outflowValue &&
@@ -58,83 +64,47 @@ const App = () => {
 
 	return (
     <ChakraProvider>
-      <Flex height="100vh" width="100vw" direction="column" background="white" overflowY="scroll">
+      <Flex height="100vh" width="100vw" direction="column" background="white" overflowY="scroll" alignItems="center">
         <Heading as="h1" size="xl">Transaction CSV File Parser</Heading>
         <Heading as="h2" size="md">Find non-matching transactions between a pair of CSV files</Heading>
-        <Schema
-          firstCsvData={firstCsvData}
-          setFirstCsvData={setFirstCsvData}
-          setFirstCsvOutflowColumnIndex={setFirstCsvOutflowColumnIndex}
-          setFirstCsvInflowColumnIndex={setFirstCsvInflowColumnIndex}
 
-          secondCsvData={secondCsvData}
-          setSecondCsvData={setSecondCsvData}
-          setSecondCsvOutflowColumnIndex={setSecondCsvOutflowColumnIndex}
-          setSecondCsvInflowColumnIndex={setSecondCsvInflowColumnIndex}
+        {(firstCsvData === null || !firstCsvData.rows.some(row => row.oppositeCsvMatchingRowIndex !== undefined)) &&
+          (secondCsvData === null || !secondCsvData.rows.some(row => row.oppositeCsvMatchingRowIndex !== undefined)) &&
 
-          calculateButtonClickHandler={calculateButtonClickHandler} />
+          <Schema
+            firstCsvData={firstCsvData}
+            setFirstCsvData={setFirstCsvData}
+            firstCsvOutflowColumnIndex={firstCsvOutflowColumnIndex}
+            setFirstCsvOutflowColumnIndex={setFirstCsvOutflowColumnIndex}
+            firstCsvInflowColumnIndex={firstCsvInflowColumnIndex}
+            setFirstCsvInflowColumnIndex={setFirstCsvInflowColumnIndex}
+
+            secondCsvData={secondCsvData}
+            setSecondCsvData={setSecondCsvData}
+            secondCsvOutflowColumnIndex={secondCsvOutflowColumnIndex}
+            setSecondCsvOutflowColumnIndex={setSecondCsvOutflowColumnIndex}
+            secondCsvInflowColumnIndex={secondCsvInflowColumnIndex}
+            setSecondCsvInflowColumnIndex={setSecondCsvInflowColumnIndex}
+
+            calculateButtonClickHandler={calculateButtonClickHandler}
+
+            maxWidth={MAXWIDTH} />
+        }
 
         {firstCsvData !== null && firstCsvData.rows.some(row => row.oppositeCsvMatchingRowIndex !== undefined) &&
-          <Box>
-            <TableContainer overflowX="scroll" maxWidth="80vw">
-              <Table variant='simple'>
-                <Thead>
-                  <Tr>
-                    {firstCsvData.columnHeaders.map(columnHeader => {
-                      return (
-                        <Th key={uuidv4()}>{columnHeader}</Th>
-                      )
-                    })}
-                  </Tr>
-                </Thead>
-                <Tbody>
-                {firstCsvData.rows.filter(row => row.oppositeCsvMatchingRowIndex === undefined).map(row => {
-                  return (
-                  <Tr key={uuidv4()}>
-                    {row.columns.map(column => {
-                      return (
-                        <Td key={uuidv4()}>{column}</Td>
-                      )
-                    })}
-                  </Tr>
-                  )
-                })}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Box>
+          <ResultTable
+            csvData={firstCsvData}
+            title="Unmatched transactions in first CSV file"
+            maxWidth={MAXWIDTH} />
         }
 
         {secondCsvData !== null && secondCsvData.rows.some(row => row.oppositeCsvMatchingRowIndex !== undefined) &&
-          <Box>
-            <TableContainer overflowX="scroll" maxWidth="80vw">
-              <Table variant='simple'>
-                <Thead>
-                  <Tr>
-                    {secondCsvData.columnHeaders.map(columnHeader => {
-                      return (
-                        <Th key={uuidv4()}>{columnHeader}</Th>
-                      )
-                    })}
-                  </Tr>
-                </Thead>
-                <Tbody>
-                {secondCsvData.rows.filter(row => row.oppositeCsvMatchingRowIndex === undefined).map(row => {
-                  return (
-                  <Tr key={uuidv4()}>
-                    {row.columns.map(column => {
-                      return (
-                        <Td key={uuidv4()}>{column}</Td>
-                      )
-                    })}
-                  </Tr>
-                  )
-                })}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </Box>
+          <ResultTable
+            csvData={secondCsvData}
+            title="Unmatched transactions in second CSV file"
+            maxWidth={MAXWIDTH} />
         }
+
         <Flex flex="1" alignItems="end" justifyContent="center" padding="1rem" whiteSpace="pre-wrap" background="transparent">
           Made with ♥ by <Link href="https://github.com/ohjohnsen" target="_blank">Øystein Holvik Johnsen</Link>
         </Flex>

@@ -89,8 +89,8 @@ const CsvFileReader = props => {
           <ProgressBar style={styles.progressBarBackgroundColor} />
           {csvData !== null &&
             <>
-              <TableContainer overflowX="scroll" maxWidth="80vw">
-                <Table variant='simple'>
+              <TableContainer overflowX="scroll">
+                <Table variant='simple' size="sm">
                   <Thead>
                     <Tr>
                       {csvData.columnHeaders.map(columnHeader => {
