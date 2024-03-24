@@ -13,8 +13,7 @@ const App = () => {
   const [secondCsvInflowColumnIndex, setSecondCsvInflowColumnIndex] = useState(-1);
 
   const calculateButtonClickHandler = () => {
-    console.log("bæss")
-    const valueRegexPattern = /[0-9]*[.,][0-9]{2}/g;
+    const valueRegexPattern = /\d*[.,]?\d+/g;
 
     const firstCsvDataCopy = { ...firstCsvData };
     firstCsvDataCopy.rows.forEach(row => {
